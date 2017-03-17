@@ -1,0 +1,65 @@
+version: "3"
+services:
+
+  publish:
+    build: ./6-2_publish
+    hostname: publish.aempoc.com
+    #image: aem-docker-poc_6-2_publish:latest
+    deploy:
+      resources:
+        limits:
+          memory: 2g
+        reservations:
+          memory: 1g
+    volumes:
+      - pubrepository:/aem/crx-quickstart/repository
+    ports:
+      - "4503:4503"
+    networks:
+      main:
+        aliases:
+          - author
+    environment:
+      - CQ_RUNMODE=publish,docker
+
+  author:
+    build: ./6-2_author
+    hostname: author.aempoc.com
+    #image: aem-docker-poc_6-2_author:latest
+    deploy:
+      resources:
+        limits:
+          memory: 2g
+        reservations:
+          memory: 1g
+    volumes:
+      - autrepository:/aem/crx-quickstart/repository
+    ports:
+      - "4502:4502"
+    networks:
+      main:
+        aliases:
+          - author
+    environment:
+      - CQ_RUNMODE=author,docker
+
+  dispatcher:
+    build: ./dispatcher
+    hostname: www.aempoc.com
+    #image: aem-docker-poc_6-2_dispatcher:latest
+    ports:
+      - "80:80"
+    depends_on:
+      - publish
+    networks:
+      main:
+        aliases:
+          - dispatcher
+
+
+volumes:
+  autrepository:
+  pubrepository:
+
+networks:
+  main:

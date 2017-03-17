@@ -1,0 +1,9 @@
+$ cat .gitignore
+# exclude
+license.properties
+.DS_Store
+*.swp
+*.iml
+.idea
+6-2_base/*.jar
+6-2_base/license.properties
